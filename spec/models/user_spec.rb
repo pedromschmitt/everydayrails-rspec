@@ -24,18 +24,8 @@ RSpec.describe User, type: :model do
   end
 
   it "is invalid with a duplicate email address" do
-    User.create(
-      first_name: "Joe",
-      last_name: "Tester",
-      email: "tester@example.com",
-      password: "testerpassword",
-    )
-    user = User.new(
-      first_name: "Jane",
-      last_name: "Tester",
-      email: "tester@example.com",
-      password: "testerpassword",
-    )
+    FactoryBot.create(:user, email: "tester@example.com")
+    user = FactoryBot.build(:user, email: "tester@example.com")
     user.valid?
     expect(user.errors[:email]).to  include("has already been taken")
   end
@@ -44,4 +34,5 @@ RSpec.describe User, type: :model do
     user = FactoryBot.build(:user, first_name: "John", last_name: "Doe")
     expect(user.name).to eq "John Doe"
   end
+
 end
