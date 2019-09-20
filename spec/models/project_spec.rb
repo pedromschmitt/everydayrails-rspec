@@ -36,22 +36,33 @@ RSpec.describe Project, type: :model do
       email: "joetester@example.com",
       password: "testerpassword",
     )
-
     user.projects.create(
       name: "Test project",
     )
-
     other_user = User.create(
       first_name: "Jane",
       last_name: "Tester",
       email: "janetester@example.com",
       password: "testerpassword",
     )
-
     other_project = other_user.projects.new(
       name: "Test project",
     )
-  
     expect(other_project).to be_valid
+  end
+
+  describe "late status" do
+    it "is late when the due date is past today" do
+      project = FactoryBot.create(:project_due_yesterday)
+      expect(project).to be_late
+    end
+    it "is on time when the due date is today" do
+      project = FactoryBot.create(:project_due_today)
+      expect(project).to_not be_late
+    end
+    it "is late when the due date is in the future" do
+      project = FactoryBot.create(:project_due_tomorrow)
+      expect(project).to_not be_late
+    end
   end
 end
